@@ -16,6 +16,7 @@ namespace PDFMerge
             //args = new string[] { @"s:\hrishi-shams\temp\visa\hrishi\i797\1797_Dec_2010.pdf", @"s:\hrishi-shams\temp\visa\hrishi\i797\i797_Nov_2008.pdf", @"c:\users\hrishi\documents\combined.pdf" };
             //args = new string[] { @"s:\hrishi-shams\temp\visa\C.pdf", @"s:\hrishi-shams\temp\S.pdf",
             //    @"c:\users\hrishi\documents\combined.pdf" };
+            //args = new string[] { "-i", @"C:\hrishi\H\Affidavit\Affidavit_H_Page1.jpg", @"C:\Hrishi\H\Affidavit\output.pdf" };
             if ((args ==null)||(args.Length==0))
             {
                 Console.WriteLine("Arguments cannot be null");
@@ -27,16 +28,28 @@ namespace PDFMerge
             string Outfile = args[args.Length-1];
 
             //List<string> inputFiles = new List<string>();
+            if (args[0].Trim() != "-i")
+            {
+                MergeFiles(Outfile, args);
+            }
+            else if (args[0].Trim()=="-i")
+            {
+                AddImagesToPDF(Outfile, args);
 
+            }
             
+        }
 
 
+        public static void MergeFiles(string Outfile, string[] args)
+        {
+            
             using (FileStream stream = new FileStream(Outfile, FileMode.Create))
             {
                 Document doc = new Document();
                 PdfCopy pdf = new PdfCopy(doc, stream);
                 doc.Open();
-                
+
 
                 PdfReader reader = null;
                 PdfImportedPage page = null;
@@ -45,18 +58,41 @@ namespace PDFMerge
                 {
                     reader = new PdfReader(args[i]);
 
-                    for (int j=0; j< reader.NumberOfPages;j++)                
+                    for (int j = 0; j < reader.NumberOfPages; j++)
                     {
-                        page = pdf.GetImportedPage(reader, j+1);
+                        page = pdf.GetImportedPage(reader, j + 1);
                         pdf.AddPage(page);
-                        
+
                     }
                     pdf.FreeReader(reader);
-                    reader.Close();                    
+                    reader.Close();
                 }
                 pdf.Close();
                 doc.Close();
             }
+
         }
+
+
+        public static void AddImagesToPDF(string Outfile,string[] args)
+        {
+            using (FileStream stream = new FileStream(Outfile, FileMode.Create))
+            {
+                Document doc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
+                PdfWriter writer = PdfWriter.GetInstance(doc, stream);
+                doc.Open();
+
+                for (int i = 1; i <= args.Length - 2; i++)
+                {
+                    Image img = Image.GetInstance(args[i].ToString());
+                    img.Alignment = Element.ALIGN_LEFT;
+                    img.ScaleToFit(1024f, 768f);
+                    doc.Add(img);
+                }
+                //writer.Close();
+                doc.Close();
+            }
+        }
+
     }
 }
