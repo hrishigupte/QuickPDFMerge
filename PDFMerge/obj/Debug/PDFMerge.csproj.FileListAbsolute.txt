@@ -10,3 +10,6 @@ C:\hrishi\H\QuickPDFMerge\PDFMerge\obj\Debug\PDFMerge.pdb
 C:\hrishi\H\QuickPDFMerge\PDFMerge\bin\Debug\PDFMerge.exe
 C:\hrishi\H\QuickPDFMerge\PDFMerge\bin\Debug\PDFMerge.pdb
 C:\hrishi\H\QuickPDFMerge\PDFMerge\bin\Debug\iTextSharp.dll
+C:\hrishi\technology\my projects\QuickPDFMerge\PDFMerge\bin\Debug\PDFMerge.exe.config
+C:\hrishi\technology\my projects\QuickPDFMerge\PDFMerge\obj\Debug\PDFMerge.exe
+C:\hrishi\technology\my projects\QuickPDFMerge\PDFMerge\obj\Debug\PDFMerge.pdb
