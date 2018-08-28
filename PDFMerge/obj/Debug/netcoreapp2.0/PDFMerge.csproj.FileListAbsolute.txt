@@ -1,6 +1,3 @@
-/home/hrishi/Documents/Projects/dotnet/QuickPDFMerge/QuickPDFMerge/PDFMerge/obj/Debug/netcoreapp2.0/PDFMerge.csproj.CoreCompileInputs.cache
-/home/hrishi/Documents/Projects/dotnet/QuickPDFMerge/QuickPDFMerge/PDFMerge/obj/Debug/netcoreapp2.0/PDFMerge.AssemblyInfoInputs.cache
-/home/hrishi/Documents/Projects/dotnet/QuickPDFMerge/QuickPDFMerge/PDFMerge/obj/Debug/netcoreapp2.0/PDFMerge.AssemblyInfo.cs
 /home/hrishi/Documents/Projects/dotnet/QuickPDFMerge/QuickPDFMerge/PDFMerge/bin/Debug/netcoreapp2.0/PDFMerge.dll.config
 /home/hrishi/Documents/Projects/dotnet/QuickPDFMerge/QuickPDFMerge/PDFMerge/bin/Debug/netcoreapp2.0/PDFMerge.deps.json
 /home/hrishi/Documents/Projects/dotnet/QuickPDFMerge/QuickPDFMerge/PDFMerge/bin/Debug/netcoreapp2.0/PDFMerge.runtimeconfig.json
@@ -8,5 +5,9 @@
 /home/hrishi/Documents/Projects/dotnet/QuickPDFMerge/QuickPDFMerge/PDFMerge/bin/Debug/netcoreapp2.0/PDFMerge.dll
 /home/hrishi/Documents/Projects/dotnet/QuickPDFMerge/QuickPDFMerge/PDFMerge/bin/Debug/netcoreapp2.0/PDFMerge.pdb
 /home/hrishi/Documents/Projects/dotnet/QuickPDFMerge/QuickPDFMerge/PDFMerge/bin/Debug/netcoreapp2.0/iTextSharp.dll
+/home/hrishi/Documents/Projects/dotnet/QuickPDFMerge/QuickPDFMerge/PDFMerge/obj/Debug/netcoreapp2.0/PDFMerge.csprojResolveAssemblyReference.cache
+/home/hrishi/Documents/Projects/dotnet/QuickPDFMerge/QuickPDFMerge/PDFMerge/obj/Debug/netcoreapp2.0/PDFMerge.csproj.CoreCompileInputs.cache
+/home/hrishi/Documents/Projects/dotnet/QuickPDFMerge/QuickPDFMerge/PDFMerge/obj/Debug/netcoreapp2.0/PDFMerge.AssemblyInfoInputs.cache
+/home/hrishi/Documents/Projects/dotnet/QuickPDFMerge/QuickPDFMerge/PDFMerge/obj/Debug/netcoreapp2.0/PDFMerge.AssemblyInfo.cs
 /home/hrishi/Documents/Projects/dotnet/QuickPDFMerge/QuickPDFMerge/PDFMerge/obj/Debug/netcoreapp2.0/PDFMerge.dll
 /home/hrishi/Documents/Projects/dotnet/QuickPDFMerge/QuickPDFMerge/PDFMerge/obj/Debug/netcoreapp2.0/PDFMerge.pdb
