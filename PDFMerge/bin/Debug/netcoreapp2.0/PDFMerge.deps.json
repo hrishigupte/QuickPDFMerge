@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.0",
+    "signature": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.0": {
+      "PDFMerge/1.0.0": {
+        "dependencies": {
+          "iTextSharp": "4.1.6.0"
+        },
+        "runtime": {
+          "PDFMerge.dll": {}
+        }
+      },
+      "iTextSharp/4.1.6.0": {
+        "runtime": {
+          "iTextSharp.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "PDFMerge/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "iTextSharp/4.1.6.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
