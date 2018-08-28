@@ -22,9 +22,17 @@ namespace PDFMerge
                 Console.ReadLine();
                 return;
             }
-
-
-            string Outfile = args[args.Length-1];
+            string Outfile = "";
+            int inputparamlength = args.Length - 2;
+            if ((args[0]=="-e") && (args.Length>1))
+            {
+                //inputparamlength = args.Length - 1;
+                string inputfile = args[1];
+                new ImageExtractor().ExtractImages(inputfile);
+                return;
+            }
+            Outfile = args[inputparamlength];
+            //string Outfile = args[args.Length-1];
 
             //List<string> inputFiles = new List<string>();
 
@@ -41,8 +49,10 @@ namespace PDFMerge
                 PdfReader reader = null;
                 PdfImportedPage page = null;
 
-                for (int i = 0; i <= args.Length - 2; i++)
+                for (int i = 0; i <= inputparamlength; i++)
                 {
+                    if (args[i].Contains("-")) 
+                        continue;
                     reader = new PdfReader(args[i]);
 
                     for (int j=0; j< reader.NumberOfPages;j++)                
