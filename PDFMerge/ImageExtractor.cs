@@ -34,6 +34,10 @@ namespace PDFMerge
             for (int i =1; i<=n;i++)
             {
                 var pg = pdfreader.GetPageN(i);
+                iTextSharp.text.Rectangle page = pdfreader.GetCropBox(i);
+                float pageHeight =  page.Height;
+                float pageWidth = page.Width;
+
                 outputFileName = String.Format("{0:00}.jpg",i);
                 outputFileName = Path.Combine(dir2,outputFileName);
                 var res = PdfReader.GetPdfObject(pg.Get(PdfName.RESOURCES)) as PdfDictionary;
@@ -41,9 +45,9 @@ namespace PDFMerge
                 if (xobj==null) continue;
                 var keys = xobj.Keys;
                 if (keys.Count==0) continue;
-                //foreach (var k in keys)
-                //    Console.WriteLine(k);
-                string width ="",height="",bitspc="",filter="";
+                string width ="",height="",bitspc="",filter="",colorspace="",length="";
+                int iteration = 0;
+                List<string> dtcbmplist=new List<string>();
                 foreach (var nm in keys)
                 {
                 //PdfName nm = keys.OfType<PdfName>().SingleOrDefault();
@@ -51,7 +55,8 @@ namespace PDFMerge
                     if (!obj.IsIndirect()) continue;
                     var tg = PdfReader.GetPdfObject(obj) as PdfDictionary;
                     var type = tg.Get(PdfName.SUBTYPE) as PdfName;
-                    
+                    outputFileName = String.Format("{0:00}.jpg", i);
+                    outputFileName = Path.Combine(dir2, outputFileName);
                     foreach (PdfName t in tg.Keys)
                     {
                        // Console.WriteLine(t);
@@ -69,6 +74,12 @@ namespace PDFMerge
                             case "/BITSPERCOMPONENT":
                                 bitspc = tg.Get(t).ToString();
                                 break;
+                            case "/COLORSPACE":
+                                colorspace = tg.Get(t).ToString();
+                                break;
+                            case "/LENGTH":
+                                length = tg.Get(t).ToString();
+                                break;
                             default:
                                 break;
                        }
@@ -83,17 +94,24 @@ namespace PDFMerge
                     int xrefIndex = (obj as PRIndirectReference).Number;
                     var pdfStream = pdfreader.GetPdfObject(xrefIndex) as PRStream;
                     var data = PdfReader.GetStreamBytesRaw(pdfStream);
-                    
-                    if (filter=="/DCTDecode")
+                    //System.Drawing.Image srcimg;
+                    if (filter == "/DCTDecode")
                     {
-                        File.WriteAllBytes(outputFileName,data);
+                        //File.WriteAllBytes(outputFileName,data);
+                        string ot = String.Format("{0:00}{1}.jpg", i,iteration);
+                        ot = Path.Combine(dir2, ot);
+                        File.WriteAllBytes(ot, data);
+                        dtcbmplist.Add(ot);
+                        iteration++;
+
                     }
-                    else if (filter=="/JBIG2Decode")
+                    else if ((filter=="/JBIG2Decode"))
                     {
                       
                         int wd = int.Parse(width);
                         int ht = int.Parse(height);
                         int bpp = int.Parse(bitspc);
+                        Bitmap src;
                         PixelFormat format = PixelFormat.Format1bppIndexed;
                         switch (bpp)
                         {
@@ -109,45 +127,37 @@ namespace PDFMerge
                             default:
                                 break;
                         }
+                        
                         using (Bitmap bmp = new Bitmap(wd,ht,format))
                         {
                             BitmapData bmd = bmp.LockBits(new System.Drawing.Rectangle(0,0,wd,ht),ImageLockMode.WriteOnly,format);
                             Marshal.Copy(data,0,bmd.Scan0,data.Length);
                             bmp.UnlockBits(bmd);
-                            using (MemoryStream bmpstream = new MemoryStream())
-                            {
-                                bmp.Save(bmpstream,ImageFormat.Tiff);
-                                File.WriteAllBytes(outputFileName.Replace("jpg","tiff"),bmpstream.GetBuffer());
-                                bmpstream.Close();
-                            }
+                            bmp.Save(outputFileName, ImageFormat.Jpeg);
                         }
-                      
-                     
-                       //File.WriteAllBytes(outputFileName.Replace("jpg","jbig2"),ldata);
                        
                     }
                     else 
                     {
                         var bytedata = PdfReader.FlateDecode(data);
-                        File.WriteAllBytes(outputFileName,bytedata);
+                        File.WriteAllBytes(outputFileName.Replace("jpg","png"),bytedata);
                     }
-                    
-                    /* MemoryStream stream = new MemoryStream(data);
-                    //var image = new MagickImage(stream);
-                    //image.Write(outputFileName);
-                    Bitmap bmp = new Bitmap(stream);
-                    //bmp.Save(outputFileName);
-                    using (MemoryStream mspng = new MemoryStream())
+                }
+                if (dtcbmplist.Count>0)
+                {
+                    int imageWidth = 0, imageHeigth = 0;
+                    Bitmap b = new Bitmap((int)pageWidth,(int) pageHeight);
+                    Graphics g = Graphics.FromImage(b);
+                    int localWidth = 0;
+                    //MemoryStream s = new MemoryStream();
+                    foreach (string fl in dtcbmplist)
                     {
-                        bmp.Save(mspng,System.Drawing.Imaging.ImageFormat.Png);
-                        int l = (int)mspng.Length;
-                        byte[] pngdata = new byte[l];
-                        mspng.Read(pngdata,0,l);
-                        File.WriteAllBytes(outputFileName,pngdata);
-                        mspng.Close();
-                        stream.Close();
+                        Bitmap btc = (Bitmap)Bitmap.FromFile(fl);
+                        g.DrawImage(btc,new Point(localWidth,0));
+                        localWidth += btc.Width;
                     }
-                    //File.WriteAllBytes(outputFileName,data); */
+                    g.Flush();
+                    b.Save(outputFileName);
                 }
             }
             

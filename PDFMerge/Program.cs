@@ -31,7 +31,7 @@ namespace PDFMerge
                 new ImageExtractor().ExtractImages(inputfile);
                 return;
             }
-            Outfile = args[inputparamlength];
+            Outfile = args[inputparamlength+1];
             //string Outfile = args[args.Length-1];
 
             //List<string> inputFiles = new List<string>();
