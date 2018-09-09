@@ -25,7 +25,19 @@ namespace PDFMerge
             }
 
 
-            string Outfile = args[args.Length-1];
+            string Outfile = "";
+            int inputparamlength = args.Length - 2;
+            if ((args[0] == "-e") && (args.Length > 1))
+            {
+                //inputparamlength = args.Length - 1;
+                string inputfile = args[1];
+                new ImageExtractor().ExtractImages(inputfile);
+                return;
+            }
+            Outfile = args[inputparamlength + 1];
+
+
+            //string Outfile = args[args.Length-1];
 
             //List<string> inputFiles = new List<string>();
             if (args[0].Trim() != "-i")
@@ -78,7 +90,7 @@ namespace PDFMerge
         {
             using (FileStream stream = new FileStream(Outfile, FileMode.Create))
             {
-                Document doc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
+                Document doc = new Document(PageSize.LETTER, 70f, 10f, 40f, 0f);
                 PdfWriter writer = PdfWriter.GetInstance(doc, stream);
                 doc.Open();
 
@@ -86,7 +98,7 @@ namespace PDFMerge
                 {
                     Image img = Image.GetInstance(args[i].ToString());
                     img.Alignment = Element.ALIGN_LEFT;
-                    img.ScaleToFit(1024f, 768f);
+                    img.ScaleToFit(800f, 600f);
                     doc.Add(img);
                 }
                 //writer.Close();
