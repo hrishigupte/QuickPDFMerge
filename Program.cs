@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System.Text;
+using iText.Kernel.Exceptions;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 
@@ -68,7 +69,7 @@ static void MergeFiles(string Outfile, string[] args)
         try
         {
             byte[] finalpwdBytes = Encoding.UTF8.GetBytes(finalpwd);
-            props.SetStandardEncryption(finalpwdBytes, null, EncryptionConstants.ALLOW_PRINTING, EncryptionConstants.ENCRYPTION_AES_256);
+            props.SetStandardEncryption(finalpwdBytes, finalpwdBytes, EncryptionConstants.ALLOW_PRINTING, EncryptionConstants.ENCRYPTION_AES_256);
             ispropused = true;
         }
         catch (Exception ex)
@@ -90,22 +91,48 @@ static void MergeFiles(string Outfile, string[] args)
                 pdfoutdoc = new PdfDocument(new PdfWriter(fs, props));
             }
             PdfMerger pdfMerger = new PdfMerger(pdfoutdoc);
-
+            PdfDocument pdfindoc;
+            PdfReader pdfinreader;
+            string? inputpwd;
             for (int i = 0; i <= args.Length - 2; i++)
             {
                 try
                 {
-                    PdfDocument pdfindoc;
                     using (FileStream fsinput = File.Open(args[i], FileMode.Open, FileAccess.Read))
                     {
-                        pdfindoc = new PdfDocument(new PdfReader(fsinput));
+                        ReaderProperties rdprops = new ReaderProperties();
+                        pdfinreader = new PdfReader(fsinput, rdprops);
+                        inputpwd = "";
+                        try
+                        {
+                            pdfindoc = new PdfDocument(pdfinreader);
+                        }
+                        catch (BadPasswordException)
+                        {
+                            Console.WriteLine("The input document to be merged is encrypted, please enter the password for input file : " + args[i]);
+                            inputpwd = Console.ReadLine();
+                            rdprops.SetPassword(Encoding.UTF8.GetBytes(inputpwd));
+                            if (pdfinreader.IsCloseStream())
+                            {
+                                pdfinreader.SetCloseStream(false);
+                            }
+                            pdfinreader.Close();
+                            fsinput.Position = 0;
+                            pdfinreader = new PdfReader(fsinput, rdprops);
+                            pdfindoc = new PdfDocument(pdfinreader);
+                        }
                         pdfMerger.Merge(pdfindoc, 1, pdfindoc.GetNumberOfPages());
                         pdfindoc.Close();
+                        pdfinreader.Close();
                     }
                 }
                 catch (FileNotFoundException fnex)
                 {
                     Console.WriteLine(" Specified input file could not be found " + fnex.ToString());
+                }
+                catch (Exception gex)
+                {
+                    Console.WriteLine("Skippping file due to exception " + args[i] + " Exception : " + gex.ToString());
                 }
             }
             pdfoutdoc.Close();
